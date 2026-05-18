@@ -1,0 +1,18 @@
+image: node:20
+
+pages:
+  stage: deploy
+  variables:
+    # Set VITE_GOATCOUNTER_CODE in GitLab → Settings → CI/CD → Variables.
+    # Vite reads VITE_* env vars at build time and inlines them.
+    VITE_GOATCOUNTER_CODE: $VITE_GOATCOUNTER_CODE
+  script:
+    - npm ci || npm install
+    - npm run build
+    - rm -rf public
+    - mv dist public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
